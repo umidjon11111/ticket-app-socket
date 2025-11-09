@@ -3,8 +3,9 @@ const http = require("http");
 const { Server } = require("socket.io");
 const mongoose = require("mongoose");
 const Order = require("./models/Order");
+const job = require("./job.js");
 require("dotenv").config();
-
+job.start();
 const app = express();
 app.use(express.json());
 
