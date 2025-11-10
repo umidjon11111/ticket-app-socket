@@ -11,10 +11,7 @@ app.use(express.json());
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: "https://sakura-frontend-rho.vercel.app",
-    methods: ["GET", "POST"],
-  },
+  cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] },
 });
 
 io.on("connection", (socket) => {
@@ -76,6 +73,14 @@ io.on("connection", (socket) => {
     if (status === "done" || status === "cancelled") {
       io.to("oshxona").emit("order_updated", updated);
     }
+  });
+  socket.on("delete_order", async ({orderId}) => {
+    const deleted = await Order.findOneAndDelete({ orderId });
+    if (!deleted) return;
+
+    console.log("🗑️ Zakaz o'chirildi:", orderId);
+    io.to("kassa").emit("order_deleted", orderId);
+    io.to("oshxona").emit("order_deleted", orderId);
   });
 
   socket.on("disconnect", () => {
