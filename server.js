@@ -77,7 +77,7 @@ io.on("connection", (socket) => {
       io.to("oshxona").emit("order_updated", updated);
     }
   });
-  socket.on("delete_order", async ({orderId}) => {
+  socket.on("delete_order", async ({ orderId }) => {
     const deleted = await Order.findOneAndDelete({ orderId });
     if (!deleted) return;
 
